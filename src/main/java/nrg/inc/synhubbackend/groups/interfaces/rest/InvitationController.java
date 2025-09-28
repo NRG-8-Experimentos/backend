@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/invitations")
-@Tag(name = "Invitations", description = "Invitation Management Endpoints")
+@Tag(name = "Invitations", description = "Invitation Managements Endpoints")
 public class InvitationController {
     private final InvitationQueryService invitationQueryService;
     private final InvitationCommandService invitationCommandService;

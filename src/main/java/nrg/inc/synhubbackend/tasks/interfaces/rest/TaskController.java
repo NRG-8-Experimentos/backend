@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import nrg.inc.synhubbackend.requests.domain.model.commands.DeleteAllRequestsByTaskIdCommand;
 import nrg.inc.synhubbackend.requests.domain.services.RequestCommandService;
+import nrg.inc.synhubbackend.tasks.domain.model.commands.CreateTaskCommand;
 import nrg.inc.synhubbackend.tasks.domain.model.commands.DeleteTaskCommand;
 import nrg.inc.synhubbackend.tasks.domain.model.commands.UpdateTaskStatusCommand;
 import nrg.inc.synhubbackend.tasks.domain.model.queries.GetAllTaskByStatusQuery;
@@ -95,5 +96,17 @@ public class TaskController {
 
 
         return ResponseEntity.noContent().build();
+    }
+
+    // src/main/java/nrg/inc/synhubbackend/tasks/interfaces/rest/TaskController.java
+    @PostMapping
+    @Operation(summary = "Crear una nueva tarea", description = "Agrega una nueva tarea")
+    public ResponseEntity<TaskResource> createTask(@RequestBody CreateTaskCommand command) {
+        var task = taskCommandService.handle(command);
+
+        if (task.isEmpty()) return ResponseEntity.badRequest().build();
+
+        var taskResource = TaskResourceFromEntityAssembler.toResourceFromEntity(task.get());
+        return ResponseEntity.status(201).body(taskResource);
     }
 }
