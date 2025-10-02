@@ -13,4 +13,6 @@ public interface TaskMetricsQueryService {
     TaskDistributionResource handle(GetTaskDistributionForMemberQuery query);
     RescheduledTasksResource handle(GetRescheduledTasksForMemberQuery query);
     AvgCompletionTimeResource handle(GetAvgCompletionTimeForMemberQuery query);
+    TaskTimePassedResource handle(GetTaskTimePassedByIdQuery query);
+    TaskDurationResource handle(GetTaskDurationByIdQuery query);
 }

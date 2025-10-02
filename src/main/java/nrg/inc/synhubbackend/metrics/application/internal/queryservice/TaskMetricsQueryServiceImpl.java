@@ -12,6 +12,7 @@ import nrg.inc.synhubbackend.tasks.domain.model.valueobjects.TaskStatus;
 import nrg.inc.synhubbackend.tasks.infrastructure.persistence.jpa.repositories.TaskRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -188,5 +189,41 @@ public class TaskMetricsQueryServiceImpl implements TaskMetricsQueryService {
                 avg / (1000 * 60 * 60 * 24),
                 Map.of("completedTasks", completedTasks.size())
         );
+    }
+
+    @Override
+    public TaskTimePassedResource handle(GetTaskTimePassedByIdQuery query) {
+        Optional<Task> taskOpt = taskRepository.findById(query.taskId());
+        if (taskOpt.isEmpty()) {
+            throw new IllegalArgumentException("Task not found with ID: " + query.taskId());
+        }
+
+        Task task = taskOpt.get();
+        if (task.getStatus() != TaskStatus.COMPLETED && task.getStatus() != TaskStatus.DONE) {
+            throw new IllegalStateException("Task is not completed or done.");
+        }
+
+        Long memberId = task.getMember() != null ? task.getMember().getId() : null;
+        long timePassedMillis = task.getTimePassed();
+
+        return new TaskTimePassedResource(memberId, timePassedMillis);
+    }
+
+    @Override
+    public TaskDurationResource handle(GetTaskDurationByIdQuery query) {
+        Optional<Task> taskOpt = taskRepository.findById(query.taskId());
+        if (taskOpt.isEmpty()) {
+            throw new IllegalArgumentException("Task not found with ID: " + query.taskId());
+        }
+
+        Task task = taskOpt.get();
+        if (task.getStatus() != TaskStatus.IN_PROGRESS) {
+            throw new IllegalStateException("Task is not IN_PROGRESS.");
+        }
+
+        long durationMillis = OffsetDateTime.now().toInstant().toEpochMilli() - task.getCreatedAt().toInstant().toEpochMilli();
+        long durationHours = durationMillis / (1000 * 60 * 60);
+
+        return new TaskDurationResource(task.getId(), durationHours);
     }
 }

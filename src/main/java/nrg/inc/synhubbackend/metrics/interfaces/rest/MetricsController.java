@@ -159,4 +159,16 @@ public class MetricsController {
         var resource = taskMetricsQueryService.handle(query);
         return ResponseEntity.ok(resource);
     }
+
+    @GetMapping("/task/{taskId}/duration")
+    @Operation(
+        summary = "Get duration of an IN_PROGRESS task",
+        description = "Returns the duration in hours for a task that is currently IN_PROGRESS.",
+        tags = {"Metrics"}
+    )
+    public ResponseEntity<TaskDurationResource> getTaskDuration(@PathVariable Long taskId) {
+        var query = new GetTaskDurationByIdQuery(taskId);
+        var resource = taskMetricsQueryService.handle(query);
+        return ResponseEntity.ok(resource);
+    }
 }
