@@ -1,4 +1,4 @@
-package nrg.inc.synhubbackend.groups;
+package nrg.inc.synhubbackend.groups.interfaces;
 
 import nrg.inc.synhubbackend.groups.application.external.ExternalTasksService;
 import nrg.inc.synhubbackend.groups.domain.model.aggregates.Group;
