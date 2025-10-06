@@ -72,10 +72,42 @@ public class RequestControllerTests {
         testMember = new Member();
         setIdUsingReflection(testMember, 1L);
 
-        // Initialize Task
+        // Initialize and attach backing User for the Member
+        nrg.inc.synhubbackend.iam.domain.model.aggregates.User backingUser = new nrg.inc.synhubbackend.iam.domain.model.aggregates.User(
+                "memberUsername",
+                "MemberName",
+                "MemberSurname",
+                "http://img/member.png",
+                "member@example.com",
+                "secretPwd"
+        );
+        setIdUsingReflection(backingUser, 10L);
+        backingUser.setMember(testMember);
+        testMember.setUser(backingUser);
+
+        // Initialize Leader & Group (needed because TaskResourceFromEntityAssembler accesses task.getGroup().getId())
+        nrg.inc.synhubbackend.groups.domain.model.aggregates.Leader leader = new nrg.inc.synhubbackend.groups.domain.model.aggregates.Leader();
+        setIdUsingReflection(leader, 20L);
+        nrg.inc.synhubbackend.groups.domain.model.valueobjects.GroupCode groupCode = new nrg.inc.synhubbackend.groups.domain.model.valueobjects.GroupCode("ABC123456");
+        nrg.inc.synhubbackend.groups.domain.model.aggregates.Group group = new nrg.inc.synhubbackend.groups.domain.model.aggregates.Group(
+                "GroupName",
+                "Group Description",
+                "http://img/group.png",
+                leader,
+                groupCode
+        );
+        setIdUsingReflection(group, 30L);
+
+        // Initialize Task (must have non-null title, description, group, member, dueDate, createdAt, updatedAt)
         testTask = new Task();
         setIdUsingReflection(testTask, 100L);
+        setTaskTitleUsingReflection(testTask, "Sample Task Title");
+        setTaskDescriptionUsingReflection(testTask, "Sample Task Description");
         testTask.setMember(testMember);
+        testTask.setGroup(group);
+        setTaskDueDateUsingReflection(testTask, java.time.OffsetDateTime.now().plusDays(1));
+        setCreatedAtUsingReflection(testTask, java.time.OffsetDateTime.now().minusHours(1));
+        setUpdatedAtUsingReflection(testTask, java.time.OffsetDateTime.now());
 
         // Initialize Requests
         testRequest1 = new Request();
@@ -84,6 +116,8 @@ public class RequestControllerTests {
         setDescriptionUsingReflection(testRequest1, "Test request 1 description");
         setRequestTypeUsingReflection(testRequest1, "SUBMISSION");
         setRequestStatusUsingReflection(testRequest1, "PENDING");
+        setCreatedAtUsingReflection(testRequest1, java.time.OffsetDateTime.now().minusMinutes(30));
+        setUpdatedAtUsingReflection(testRequest1, java.time.OffsetDateTime.now().minusMinutes(5));
 
         testRequest2 = new Request();
         setIdUsingReflection(testRequest2, 2000L);
@@ -91,6 +125,8 @@ public class RequestControllerTests {
         setDescriptionUsingReflection(testRequest2, "Test request 2 description");
         setRequestTypeUsingReflection(testRequest2, "MODIFICATION");
         setRequestStatusUsingReflection(testRequest2, "APPROVED");
+        setCreatedAtUsingReflection(testRequest2, java.time.OffsetDateTime.now().minusMinutes(25));
+        setUpdatedAtUsingReflection(testRequest2, java.time.OffsetDateTime.now().minusMinutes(2));
 
         // Initialize UserDetails
         testUserDetails = User.withUsername("testmember")
@@ -211,6 +247,24 @@ public class RequestControllerTests {
             updatedAtField.setAccessible(true);
             updatedAtField.set(entity, updatedAt);
         }
+    }
+
+    /**
+     * Helper method to set title using reflection for Task
+     */
+    private void setTaskTitleUsingReflection(Task task, String title) throws Exception {
+        java.lang.reflect.Field f = Task.class.getDeclaredField("title");
+        f.setAccessible(true);
+        f.set(task, title);
+    }
+
+    /**
+     * Helper method to set description using reflection for Task
+     */
+    private void setTaskDescriptionUsingReflection(Task task, String description) throws Exception {
+        java.lang.reflect.Field f = Task.class.getDeclaredField("description");
+        f.setAccessible(true);
+        f.set(task, description);
     }
 
     // CREATE REQUEST TESTS
