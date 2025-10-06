@@ -1,4 +1,4 @@
-package nrg.inc.synhubbackend.iam;
+package nrg.inc.synhubbackend.iam.interfaces;
 
 import nrg.inc.synhubbackend.groups.domain.model.aggregates.Leader;
 import nrg.inc.synhubbackend.iam.domain.model.aggregates.User;
@@ -30,7 +30,6 @@ import org.springframework.http.ResponseEntity;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;

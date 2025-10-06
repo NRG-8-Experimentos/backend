@@ -1,4 +1,4 @@
-package nrg.inc.synhubbackend.requests;
+package nrg.inc.synhubbackend.requests.interfaces;
 
 import nrg.inc.synhubbackend.requests.domain.model.aggregates.Request;
 import nrg.inc.synhubbackend.requests.domain.model.commands.CreateRequestCommand;

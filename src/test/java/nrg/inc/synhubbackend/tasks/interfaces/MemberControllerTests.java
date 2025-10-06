@@ -1,4 +1,4 @@
-package nrg.inc.synhubbackend.tasks;
+package nrg.inc.synhubbackend.tasks.interfaces;
 
 import nrg.inc.synhubbackend.groups.domain.model.aggregates.Group;
 import nrg.inc.synhubbackend.groups.domain.model.aggregates.Leader;

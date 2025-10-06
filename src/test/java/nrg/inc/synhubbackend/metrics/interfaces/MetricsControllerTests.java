@@ -1,4 +1,4 @@
-package nrg.inc.synhubbackend.metrics;
+package nrg.inc.synhubbackend.metrics.interfaces;
 
 import nrg.inc.synhubbackend.groups.domain.model.aggregates.Group;
 import nrg.inc.synhubbackend.groups.domain.model.aggregates.Leader;
