@@ -221,7 +221,8 @@ public class TaskMetricsQueryServiceImpl implements TaskMetricsQueryService {
             throw new IllegalStateException("Task is not IN_PROGRESS.");
         }
 
-        long durationMillis = OffsetDateTime.now().toInstant().toEpochMilli() - task.getCreatedAt().toInstant().toEpochMilli();
+        // Calcular la duración usando la fecha de creación y la fecha de culminación
+        long durationMillis = task.getDueDate().toInstant().toEpochMilli() - task.getCreatedAt().toInstant().toEpochMilli();
         long durationHours = durationMillis / (1000 * 60 * 60);
 
         return new TaskDurationResource(task.getId(), durationHours);
