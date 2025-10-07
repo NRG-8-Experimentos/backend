@@ -65,7 +65,6 @@ public class TaskController {
     public ResponseEntity<TaskResource> updateTaskStatus(@PathVariable Long taskId, @PathVariable String status) {
         var updateTaskStatusCommand = new UpdateTaskStatusCommand(taskId, status);
         var task = this.taskCommandService.handle(updateTaskStatusCommand);
-
         if (task.isEmpty()) return ResponseEntity.badRequest().build();
 
         var taskResource = TaskResourceFromEntityAssembler.toResourceFromEntity(task.get());
